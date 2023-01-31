@@ -22,37 +22,37 @@
 window.Auth_UpdateScore =  function() { UpdateScore();};
 async function UpdateScore()
   {
-  
+
     var ThisUserCustomName = window.document.getElementById('LoginUserName').value;
     if (ThisUserCustomName.length<2) return;
- 
+
     const UserRef  = await collection(db, "users");
     const q = await query(UserRef, where("auth.uid", "==", window.AccountUid), limit(1));
     const querySnapshot = await getDocs(q);
-    
+
     var DateNow = new Date();
     var DaysSinceEpoch = DateNow/86400000;
 
-    querySnapshot.forEach((MyDoc) => 
-      { 
-        updateDoc(doc(db, "users", MyDoc.id), { 
-          "statistics.GamePlayed": (window.AccountGamePlayed*1), 
-          "statistics.AveragePlacement": (window.AccountAveragePlacement*1), 
-          "statistics.DaysSinceEpoch": (DaysSinceEpoch*1), 
+    querySnapshot.forEach((MyDoc) =>
+      {
+        updateDoc(doc(db, "users", MyDoc.id), {
+          "statistics.GamePlayed": (window.AccountGamePlayed*1),
+          "statistics.AveragePlacement": (window.AccountAveragePlacement*1),
+          "statistics.DaysSinceEpoch": (DaysSinceEpoch*1),
           "statistics.AccountCoins": (window.AccountCoins*1),
           "statistics.AccountSaveString": "Save"+window.AccountSaveString,
           "statistics.totalPoints": (window.AccountTotalPoints*1)});
       });
-    
+
       setTimeout(function() { GetScores(); }, 2000);
   }
-    
-    
+
+
 window.Auth_UpdateUserName =  function() { UpdateUserName();};
 
 async function UpdateUserName()
 {
-  
+
   if (window.ConnectedToAccount == false) return;
 
   var ThisUserCustomName = window.document.getElementById('LoginUserName').value;
@@ -62,21 +62,21 @@ async function UpdateUserName()
   const UserRef  = await collection(db, "users");
   const q = await query(UserRef, where("auth.uid", "==", window.AccountUid), limit(1));
   const querySnapshot = await getDocs(q);
-  
-  querySnapshot.forEach((MyDoc) => 
-    { 
+
+  querySnapshot.forEach((MyDoc) =>
+    {
       updateDoc(doc(db, "users", MyDoc.id), { "auth.displayName": ThisUserCustomName, "auth.iconURL": ""+window.AccountIcon });
     });
-    
+
     setTimeout(function() { GetScores(); }, 2000);
 }
 
 
 async function UpdateUser()
 {
-  
-  
-  
+
+
+
   const UserRef  = await collection(db, "users");
   const q = await query(UserRef, where("auth.uid", "==", window.AccountUid), limit(1));
   const querySnapshot = await getDocs(q);
@@ -85,8 +85,8 @@ async function UpdateUser()
   var UpdateLogin = false;
 
   // Look if player is aready in database
-  querySnapshot.forEach((doc) => 
-    { 
+  querySnapshot.forEach((doc) =>
+    {
      window.AccountFirstLogin = false;
      window.AccountTotalPoints = doc.data().statistics.totalPoints*1;
      window.AccountCoins = doc.data().statistics.AccountCoins*1;
@@ -95,13 +95,13 @@ async function UpdateUser()
      window.AccountGamePlayed = doc.data().statistics.GamePlayed*1;
      if (window.AccountGamePlayed === NaN) window.AccountGamePlayed = 0;
      if (window.AccountGamePlayed != window.AccountGamePlayed*1) window.AccountGamePlayed = 0;
-    
+
      window.AccountAveragePlacement = doc.data().statistics.AveragePlacement*1;
      if (window.AccountAveragePlacement === NaN) window.AccountAveragePlacement = 0;
      if (window.AccountAveragePlacement != window.AccountAveragePlacement*1) window.AccountAveragePlacement = 0;
 
      window.AccountloadString = "";
-     try 
+     try
      {
        window.AccountloadString  = doc.data().statistics.AccountSaveString;
      }
@@ -119,13 +119,13 @@ async function UpdateUser()
       window.AccountName = "GUEST";
       window.AccountRealName = "GUEST";
     }
-    
+
 
 
     window.AccountIcon = "resources/login/guest.png";
     if (doc.data().auth.iconURL !="" && doc.data().auth.iconURL !=null)  window.AccountIcon = doc.data().auth.iconURL;
-    
- 
+
+
     console.log("+++++++++++++++++++++++++++++++++");
     console.log(doc.data().auth);
     console.log("+++++++++++++++++++++++++++++++++");
@@ -133,28 +133,28 @@ async function UpdateUser()
     console.log("+++++++++++++++++++++++++++++++++");
 
 
-    }); 
+    });
 
     console.log("AccountUid",window.AccountUid);
 
     // If User not in database we create it
     if ( window.AccountFirstLogin == true)
     {
-       
+
       window.AccountName = window.AccountRealName;
       window.AccountCoins = 4;
 
-      if (AccountFirstLogin==true ) 
+      if (AccountFirstLogin==true )
       window.AccountIcon = window.AccountDefaultIcon;
       else
       window.AccountIcon = "resources/login/guest.png";
-  
-        try 
+
+        try
         {
           const Now = Date.now();
-          const docRef = await addDoc(collection(db, "users"), 
+          const docRef = await addDoc(collection(db, "users"),
             {
-              auth: 
+              auth:
                 {
                   createdAt: Now,
                   displayName: window.AccountName,
@@ -165,11 +165,11 @@ async function UpdateUser()
 
               statistics:
                 {
-                  totalPoints: 0,               
-                  GamePlayed: 0,               
-                  AveragePlacement: 0,   
+                  totalPoints: 0,
+                  GamePlayed: 0,
+                  AveragePlacement: 0,
                   AccountCoins: 50
-            
+
                 }
             }
             );
@@ -184,7 +184,7 @@ async function UpdateUser()
     window.updateConnectIcon();
     setTimeout(function() {  window.updateConnectIcon(); }, 250);
 
-   
+
 
 }
 
@@ -195,7 +195,7 @@ async function GetScores()
 
   var DateNow = new Date();
   var DaysSinceEpoch = (DateNow/86400000)+8;
-  
+
 
 
   window.HiScores = [];
@@ -206,7 +206,7 @@ if (window.HiScoreScope==0)
   q = await query(UserRef, orderBy ("statistics.totalPoints","desc"), limit(10));
   else
   q = await query(UserRef, where ("statistics.DaysSinceEpoch","<",DaysSinceEpoch), orderBy ("statistics.DaysSinceEpoch","desc"), limit(10));
- 
+
 
 
   const querySnapshot = await getDocs(q);
@@ -214,33 +214,33 @@ if (window.HiScoreScope==0)
   //console.log(querySnapshot);
   var Rank = 1;
   var LowestHiScorePoints = 9999 ;
-  querySnapshot.forEach((doc) => 
-    { 
-      try 
+  querySnapshot.forEach((doc) =>
+    {
+      try
       {
 
         window.HiScores.push({
-          displayName:doc.data().auth.displayName, 
-          totalPoints:doc.data().statistics.totalPoints*1, 
+          displayName:doc.data().auth.displayName,
+          totalPoints:doc.data().statistics.totalPoints*1,
           iconURL:doc.data().auth.iconURL});
-        
+
           if (window.HiScoreScope==0)
           if (doc.data().statistics.totalPoints == window.AccountTotalPoints*1) window.AccountRank = Rank;
-       
+
           LowestHiScorePoints = doc.data().statistics.totalPoints*1;
-      
+
 
       }catch (e) {}
-    
+
       Rank++;
-    }); 
-    
+    });
+
       // define rank using lowest hiscore and virtual 15000 users
-      try 
+      try
       {
-        
+
         if (window.HiScoreScope==0)
-        if (window.AccountTotalPoints*1 < LowestHiScorePoints*1) 
+        if (window.AccountTotalPoints*1 < LowestHiScorePoints*1)
         {
           window.AccountRank = Math.floor(20000 * (LowestHiScorePoints*1-window.AccountTotalPoints*1)/(LowestHiScorePoints*1)   );
         }
@@ -268,7 +268,7 @@ if (window.HiScoreScope==0)
 
       HiScores[j].displayName = displayName_a;
       HiScores[j].totalPoints = totalPoints_a;
-      HiScores[j].iconURL = iconURL_a;    
+      HiScores[j].iconURL = iconURL_a;
     }
   }
 
@@ -279,23 +279,23 @@ if (window.HiScoreScope==0)
   // detect auth stat
   onAuthStateChanged (auth, user=>
   {
-    if (user!= null) 
+    if (user!= null)
     {
       console.log('logged in !');
       console.log(user);
-      
+
       if (user.displayName !=null)
       {
       window.AccountName = user.displayName;
       window.AccountRealName = user.displayName;
       }
- 
+
      else
      {
        window.AccountName = "GUEST";
        window.AccountRealName = "GUEST";
      }
-     
+
      window.AccountIcon = "resources/login/guest.png";
      if (user.photoURL !=null || user.photoURL !="" ) window.AccountIcon = user.photoURL;
      if (user.iconURL  !=null || user.iconURL  !="" ) window.AccountIcon = user.iconURL;
@@ -305,7 +305,7 @@ if (window.HiScoreScope==0)
      if (user.photoURL !=null || user.photoURL !="" ) window.AccountIcon = user.photoURL;
 
 
-     
+
       window.AccountUid = user.uid;
       window.ConnectedToAccount = true;
       window.Login_CloseWindow();
@@ -327,7 +327,9 @@ if (window.HiScoreScope==0)
       window.ConnectedToAccount = false;
       window.updateConnectIcon();
       Login_CheckLoged();
-      window.Login_OpenWindow()
+      // window.Login_OpenWindow()
+      // H2 Fixed
+      window.Login_CloseWindow();
     }
   }
   );
@@ -341,11 +343,11 @@ window.Auth_Connect_Google =  function()
   const provider = new GoogleAuthProvider();
 
   signInWithPopup(auth, provider).then((result) => {
-  
+
     // This gives you a Google Access Token. You can use it to access the Google API.
   const credential = GoogleAuthProvider.credentialFromResult(result);
   const token = credential.accessToken;
-  
+
   // The signed-in user info.
   const user = result.user;
   //console.log(user);
@@ -353,7 +355,7 @@ window.Auth_Connect_Google =  function()
 
   // ...
   }).catch((error) => {
-  
+
     // Handle Errors here.
   const errorCode = error.code;
   const errorMessage = error.message;
@@ -361,7 +363,7 @@ window.Auth_Connect_Google =  function()
 
   // The email of the user's account used.
   const email = error.email;
-  
+
   // The AuthCredential type that was used.
   const credential = GoogleAuthProvider.credentialFromError(error);
   // ...
@@ -385,7 +387,7 @@ window.Auth_Connect_Facebook =  function()
     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
     const credential = FacebookAuthProvider.credentialFromResult(result);
     const token = credential.accessToken;
-    
+
     // The signed-in user info.
     const user = result.user;
     console.log(user);
@@ -407,7 +409,7 @@ window.Auth_Connect_Facebook =  function()
     console.log(email);
     console.log(credential);
 
-    if (errorCode === 'auth/account-exists-with-different-credential') 
+    if (errorCode === 'auth/account-exists-with-different-credential')
     {
       const Try_provider = new GoogleAuthProvider();
       signInWithRedirect(auth, Try_provider);
@@ -422,7 +424,7 @@ window.Auth_Connect_Facebook =  function()
 // Connect with Facebook
 window.Auth_Connect_Guest =  function()
 {
- 
+
   signInAnonymously(auth)
   .then((result) => {
     // Signed in..

@@ -20,7 +20,7 @@ var HiScores = [];
 var HiScoreScope = 0;
 
 function Login_CheckLoged() {
-  if ( Trigger_DisableFireBAse == true ) return; 
+  if ( Trigger_DisableFireBAse == true ) return;
 
   if (ConnectedToAccount == true) {
     document.getElementById('LoginWindow').style = "display:none;";
@@ -34,7 +34,7 @@ function Login_CheckLoged() {
 }
 
 function Login_OpenWindow() {
-  if ( Trigger_DisableFireBAse == true ) return; 
+  if ( Trigger_DisableFireBAse == true ) return;
   Login_CheckLoged();
   var EL = document.getElementById('LoginOverlay');
   LoginOverlay.style = "display:block;";
@@ -48,7 +48,7 @@ function Login_CloseWindow() {
 
   // check user Name
   var TempUserName = document.getElementById('LoginUserName').value;
-  // if (TempUserName.lenght<2) TempUserName = "Player"+Math.floor((Math.random()*1000));	
+  // if (TempUserName.lenght<2) TempUserName = "Player"+Math.floor((Math.random()*1000));
   document.getElementById('LoginUserName').value = TempUserName;
   AccountName = TempUserName;
   updateConnectIcon();
@@ -57,7 +57,7 @@ function Login_CloseWindow() {
 }
 
 function Login_SetAvatar(el) {
-  if ( Trigger_DisableFireBAse == true ) return; 
+  if ( Trigger_DisableFireBAse == true ) return;
   document.getElementById('LoginAvatarWindow').style = "display:none;";
   document.getElementById('LoginUserWindow').style = "display:block;";
 
@@ -70,14 +70,14 @@ function Login_SetAvatar(el) {
 }
 
 function Login_ShowAvatar() {
-  if ( Trigger_DisableFireBAse == true ) return; 
+  if ( Trigger_DisableFireBAse == true ) return;
   document.getElementById('LoginAvatarWindow').style = "display:block;";
   document.getElementById('LoginUserWindow').style = "display:none;";
 }
 
 
 function ConnectDisconnect(Type) {
-  if ( Trigger_DisableFireBAse == true ) return; 
+  if ( Trigger_DisableFireBAse == true ) return;
   if (ConnectedToAccount == false && Type == "google") Auth_Connect_Google();
   if (ConnectedToAccount == false && Type == "facebook") Auth_Connect_Facebook();
   if (ConnectedToAccount == true && Type == "close") Auth_Disconnect();
@@ -86,13 +86,13 @@ function ConnectDisconnect(Type) {
 
 function updateConnectIcon() {
 
-  if ( Trigger_DisableFireBAse == true ) return; 
- 
+  if ( Trigger_DisableFireBAse == true ) return;
+
   if (ConnectedToAccount == true) {
 
 
     // Setup Account Name + length
-    if (AccountName != "" && AccountName != null) 
+    if (AccountName != "" && AccountName != null)
     {
         document.getElementById('LoginUserName').value = AccountName;
         Sockets_PlayerName = document.getElementById('LoginUserName').value
@@ -102,7 +102,7 @@ function updateConnectIcon() {
 
     if (AccountIcon=="null" || AccountIcon==null || AccountIcon == "") AccountIcon = "resources/login/guest.png";
     if (AccountDefaultIcon=="null" || AccountDefaultIcon==null || AccountDefaultIcon == "") AccountDefaultIcon = "resources/login/guest.png";
-   
+
     document.getElementById('LoginUserIcon').src = AccountIcon;
     document.getElementById('LoginUserAvatar').src = AccountDefaultIcon;
 
