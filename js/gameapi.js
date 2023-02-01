@@ -6562,7 +6562,7 @@ if (typeof window !== "undefined" && !window.famobi_tracking) {
                         reject();
                     });
 
-                    xhttp.open('POST', tracking.endpointUrl + 'event/user', true);
+                    xhttp.open('GET', tracking.endpointUrl + 'event/user', true);
                     xhttp.setRequestHeader('Content-type', 'application/json');
                     xhttp.setRequestHeader('X-Version', tracking.version);
                     xhttp.setRequestHeader('X-Game', tracking.game);
@@ -6704,7 +6704,7 @@ if (typeof window !== "undefined" && !window.famobi_tracking) {
 
                 setTimeout(reject, 10000);
 
-                xhttp.open('POST', tracking.endpointUrl + eventPath, true);
+                xhttp.open('GET', tracking.endpointUrl + eventPath, true);
                 xhttp.setRequestHeader('Content-type', 'application/json');
                 xhttp.setRequestHeader('X-Game', tracking.game);
                 xhttp.setRequestHeader('X-Version', tracking.version);
