@@ -4308,7 +4308,7 @@ fg_api.prototype.socketModule = function () {
             js = d.createElement(s);
             js.id = id;
             js.src =
-                "//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js";
+                "./js/socket.io.js";
             fjs.parentNode.insertBefore(js, fjs);
         })(document, "script", "socket-io");
     };
